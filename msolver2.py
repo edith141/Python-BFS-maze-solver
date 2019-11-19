@@ -16,22 +16,27 @@ class Point(object):
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
 
-
+#rw - width of the start & end points (rect) 
 rw = 2
+# p - to keep count of points. 0/1/2
 p = 0
 start = Point()
 end = Point()
 
+#4 directions to traverse each cell/point. Up,down,left,rt
 dir4 = [Point(0, -1), Point(0, 1), Point(1, 0), Point(-1, 0)]
 
-
+# BFS 
 def BFS(s, e):
 
     global img, h, w
     const = 8500
     found = False
+# q - queue
     q = []
+# v - visited nodes list
     v = [[0 for j in range(w)] for i in range(h)]
+# parent - parents of each point/node
     parent = [[Point() for j in range(w)] for i in range(h)]
 
     q.append(s)
@@ -60,9 +65,11 @@ def BFS(s, e):
         while p != s:
             path.append(p)
             p = parent[p.y][p.x]
+# the nodes seq to get to the target node
         path.append(p)
+# reverse it to get it in correct order from start to end
         path.reverse()
-
+# draw a line (continuous rects) to highlight the path
         for p in path:
             cv2.rectangle(img, (p.x - 1, p.y - 1),
                           (p.x + 1, p.y + 1), (255, 255, 255), -1)
@@ -72,7 +79,7 @@ def BFS(s, e):
 
 
 def mouse_event(event, pX, pY, flags, param):
-
+#mark the start and end points 
     global img, start, end, p
 
     if event == cv2.EVENT_LBUTTONUP:
@@ -91,6 +98,7 @@ def mouse_event(event, pX, pY, flags, param):
 
 
 def disp():
+#disp img in diff thread 
     global img
     cv2.imshow("Image", img)
     cv2.setMouseCallback('Image', mouse_event)
